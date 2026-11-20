@@ -6,7 +6,7 @@ import { Badge, Button, Card, ErrorNote, Input, Label, Modal, PageHeader, Toggle
 
 const PRESETS = [
   { name: 'Ollama (local)', base_url: 'http://localhost:11434/v1', model: 'llama3.1:8b', embed: 'nomic-embed-text' },
-  { name: 'Groq', base_url: 'https://api.groq.com/openai/v1', model: 'llama-3.3-70b-versatile', embed: '', ctx: 16384 },
+  { name: 'Groq', base_url: 'https://api.groq.com/openai/v1', model: 'openai/gpt-oss-120b', embed: '', ctx: 16384 },
   { name: 'Cloudflare Workers AI', base_url: 'https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1', model: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', embed: '@cf/baai/bge-m3', ctx: 16384 },
   { name: 'OpenAI', base_url: 'https://api.openai.com/v1', model: '', embed: '' },
   { name: 'OpenRouter', base_url: 'https://openrouter.ai/api/v1', model: '', embed: '' },
