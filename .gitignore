@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+node_modules/
+dist/
+.env
+data/
+*.log
+backend/tests/e2e_user.json
+
+# WhatsApp bridge session keys and message database (private)
+integrations/whatsapp-mcp/whatsapp-bridge/store/
+
+# compiled WhatsApp bridge (build from source; see integrations/whatsapp-mcp/UPSTREAM.md)
+integrations/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge

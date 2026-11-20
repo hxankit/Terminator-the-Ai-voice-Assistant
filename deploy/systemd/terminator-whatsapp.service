@@ -1,0 +1,18 @@
+# WhatsApp bridge (integrations/whatsapp-mcp, whatsmeow linked device) used by Terminator to send/read messages.
+# Adjust the paths below if the repo is not at ~/Projects/Terminator.
+# Install:  cp deploy/systemd/terminator-whatsapp.service ~/.config/systemd/user/
+#           systemctl --user daemon-reload && systemctl --user enable --now terminator-whatsapp
+# First run: open Terminator → Settings → WhatsApp and scan the QR code with your phone.
+[Unit]
+Description=Terminator WhatsApp bridge
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/Projects/Terminator/integrations/whatsapp-mcp/whatsapp-bridge
+ExecStart=%h/Projects/Terminator/integrations/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge
+# while waiting for a QR scan the bridge exits after 3 minutes; restart it so a fresh code appears
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    ports: ["127.0.0.1:8000:8000"]
+    env_file: backend/.env
+    environment:
+      MONGO_URI: mongodb://mongo:27017
+    volumes: [appdata:/app/backend/data]
+    depends_on: [mongo]
+    restart: unless-stopped
+    # Needed for the bubblewrap sandbox (user namespaces). Without it run_python reports "unavailable".
+    security_opt: ["seccomp=unconfined", "apparmor=unconfined"]
+  mongo:
+    image: mongo:8
+    volumes: [mongodata:/data/db]
+    restart: unless-stopped
+volumes:
+  appdata:
+  mongodata:

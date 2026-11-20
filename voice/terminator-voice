@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Wrapper so the voice service always runs with its own virtualenv.
+here="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+exec "$here/.venv/bin/python" "$here/terminator_voice.py" "$@"

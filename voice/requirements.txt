@@ -1,0 +1,12 @@
+# openwakeword is installed with --no-deps (its tflite-runtime dependency has no Python 3.12 wheels;
+# we use its ONNX backend instead). Its runtime needs are listed here explicitly.
+numpy>=1.26
+onnxruntime>=1.17
+scipy>=1.11
+scikit-learn>=1.3
+tqdm>=4.66
+requests>=2.31
+faster-whisper>=1.0
+piper-tts>=1.3
+websockets>=13
+httpx>=0.27

@@ -1,0 +1,17 @@
+# Always-on Terminator backend for the desktop (serves the built UI on http://127.0.0.1:8000).
+# Adjust the paths below if the repo is not at ~/Projects/Terminator.
+# Install:  cp deploy/systemd/terminator-api.service ~/.config/systemd/user/
+#           systemctl --user daemon-reload && systemctl --user enable --now terminator-api
+# Runs in your graphical session so desktop control (apps, volume, WhatsApp prefill) works.
+[Unit]
+Description=Terminator AI assistant (API + UI)
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/Projects/Terminator/backend
+ExecStart=%h/Projects/Terminator/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

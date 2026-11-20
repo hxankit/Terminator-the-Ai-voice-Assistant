@@ -1,0 +1,17 @@
+fastapi>=0.115
+uvicorn[standard]>=0.32
+pymongo>=4.10
+pydantic-settings>=2.6
+httpx>=0.28
+bcrypt>=4.2
+pyjwt>=2.10
+python-multipart>=0.0.18
+cryptography>=44
+pypdf>=5.1
+python-docx>=1.1
+openpyxl>=3.1
+pandas>=2.2
+beautifulsoup4>=4.12
+numpy>=2.1
+msal>=1.30
+instagrapi>=2.1
