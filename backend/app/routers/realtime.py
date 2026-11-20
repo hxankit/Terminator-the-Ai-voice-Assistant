@@ -104,15 +104,24 @@ async def websocket(ws: WebSocket):
         # turns keep running to completion and persist; a reconnecting client reloads the conversation
 
 
+async def _stt_target(user: dict, model: str | None):
+    """Prefer a provider known to host Whisper (Groq: fast and free tier), else the default provider."""
+    from ..llm.registry import user_providers
+    for p in await user_providers(user["_id"]):
+        if "api.groq.com" in p["base_url"] and p.get("models"):
+            return await resolve(user, str(p["_id"]), p["models"][0]["name"]), model or "whisper-large-v3-turbo"
+    return await resolve(user), model or "whisper-1"
+
+
 @router.post("/api/voice/transcribe")
-async def transcribe(file: UploadFile = File(...), user: dict = User, model: str = "whisper-1"):
+async def transcribe(file: UploadFile = File(...), user: dict = User, model: str | None = None):
     """Server-side speech-to-text via the provider's OpenAI-compatible /audio/transcriptions endpoint.
     Used when the browser has no built-in speech recognition. Requires a provider that serves it
     (OpenAI, Groq, a local faster-whisper/speaches server, ...)."""
     data = await file.read(25 * 1024 * 1024 + 1)
     if len(data) > 25 * 1024 * 1024:
         raise HTTPException(413, "Audio exceeds 25 MB")
-    spec = await resolve(user)
+    spec, model = await _stt_target(user, model)
     headers = {"Authorization": f"Bearer {spec.api_key}"} if spec.api_key else {}
     try:
         async with httpx.AsyncClient(timeout=120) as c:

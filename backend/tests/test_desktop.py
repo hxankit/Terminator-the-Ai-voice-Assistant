@@ -688,3 +688,18 @@ def test_stop_while_a_tool_is_running(client, auth):
 def test_user_send_request_detection(text, sends):
     from app.orchestrator import SEND_REQUEST
     assert bool(SEND_REQUEST.search(text)) is sends
+
+
+# ---------- Groq ----------
+def test_groq_is_remote_and_preferred_for_speech_to_text(client):
+    from app.llm import provider
+    groq = provider.ModelSpec("p", "https://api.groq.com/openai/v1", "k", "llama-3.3-70b-versatile")
+    assert not provider.is_local(groq.base_url) and provider.default_timeout(groq) < 900
+    h = make_user(client, "groq@example.com")
+    client.post("/api/providers", headers=h, json={"name": "Local", "base_url": "http://127.0.0.1:9/v1", "models": [{"name": "m"}]})
+    client.post("/api/providers", headers=h, json={"name": "Groq", "base_url": "https://api.groq.com/openai/v1",
+                                                   "api_key": "gsk_test_not_real", "models": [{"name": "llama-3.3-70b-versatile"}]})
+    from app.routers.realtime import _stt_target
+    user = DB.users.find_one({"email": "groq@example.com"})
+    spec, model = client.portal.call(_stt_target, user, None)      # run on the app's own event loop
+    assert spec.base_url == "https://api.groq.com/openai/v1" and model == "whisper-large-v3-turbo" and spec.api_key == "gsk_test_not_real"

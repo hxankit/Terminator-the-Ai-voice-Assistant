@@ -6,6 +6,7 @@ import { Badge, Button, Card, ErrorNote, Input, Label, Modal, PageHeader, Toggle
 
 const PRESETS = [
   { name: 'Ollama (local)', base_url: 'http://localhost:11434/v1', model: 'llama3.1:8b', embed: 'nomic-embed-text' },
+  { name: 'Groq', base_url: 'https://api.groq.com/openai/v1', model: 'llama-3.3-70b-versatile', embed: '', ctx: 16384 },
   { name: 'Cloudflare Workers AI', base_url: 'https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/ai/v1', model: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', embed: '@cf/baai/bge-m3', ctx: 16384 },
   { name: 'OpenAI', base_url: 'https://api.openai.com/v1', model: '', embed: '' },
   { name: 'OpenRouter', base_url: 'https://openrouter.ai/api/v1', model: '', embed: '' },
@@ -113,6 +114,11 @@ export default function Settings({ providers, reload, user, setPrefs }: { provid
             <div><Label>Name</Label><Input value={draft.name} onChange={e => setDraft({ ...draft, name: e.target.value })} /></div>
             <div><Label hint="OpenAI-compatible, usually ends in /v1">Base URL</Label><Input value={draft.base_url} onChange={e => setDraft({ ...draft, base_url: e.target.value })} placeholder="https://…/v1" /></div>
             <div><Label hint={draft.id ? 'leave blank to keep current' : 'not needed for Ollama'}>API key</Label><Input type="password" autoComplete="off" value={draft.api_key} onChange={e => setDraft({ ...draft, api_key: e.target.value })} /></div>
+            {draft.base_url.includes('api.groq.com') && (
+              <div className="space-y-1 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 p-3 text-xs">
+                <p>Create a key at <a className="text-accent underline" href="https://console.groq.com/keys" target="_blank" rel="noreferrer">console.groq.com/keys</a> and paste it above. After saving, use <b>Discover</b> to pick from Groq's current models and <b>Test</b> to verify tool calling.</p>
+                <p className="text-zinc-500">Very fast. Your prompts are processed by Groq. The free tier limits tokens per minute; if you hit it, Terminator falls back to your local model. Groq also powers voice transcription when your browser has no built-in speech recognition.</p>
+              </div>)}
             {draft.base_url.includes('api.cloudflare.com') && (
               <div className="space-y-2 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 p-3 text-xs">
                 <p>Create a token at <a className="text-accent underline" href="https://dash.cloudflare.com/profile/api-tokens" target="_blank" rel="noreferrer">dash.cloudflare.com → API Tokens</a> with the <b>Workers AI</b> permission and paste it above. Your account is detected automatically when you save (or click Detect account to choose one).</p>

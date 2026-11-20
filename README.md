@@ -10,7 +10,7 @@ run terminal commands after you approve each one.
 
 - **Backend:** Python 3.12 · FastAPI · async PyMongo (MongoDB) · httpx
 - **Frontend:** React 19 · TypeScript · Vite · Tailwind CSS 4
-- **LLMs:** any OpenAI-compatible endpoint, such as Ollama, OpenAI, OpenRouter, LM Studio, vLLM, or Groq. Each user can configure several.
+- **LLMs:** any OpenAI-compatible endpoint, such as Ollama, Groq, Cloudflare Workers AI, OpenAI, OpenRouter, LM Studio, or vLLM. Each user can configure several, with automatic fallback.
 
 ---
 
@@ -213,7 +213,14 @@ environment" also works after a normal shutdown. Snapshots stay in your local Mo
 under **Agents & activity → Saved environments**. Not captured: Files (Nautilus) windows (GNOME doesn't expose
 them) and unsaved editor contents.
 
-## Cloud models (Cloudflare Workers AI) with local fallback
+## Cloud models (Groq, Cloudflare Workers AI) with local fallback
+
+**Groq** (fastest): create a key at console.groq.com/keys, then go to **Settings → Add provider → Groq**, paste the key,
+**Save**, **Discover** (pick a current model), **Test**, and **Set default**. Groq also hosts Whisper, so
+`/api/voice/transcribe` uses it automatically for browsers without built-in speech recognition. The free tier limits
+tokens per minute; when you hit it, Terminator retries on your local model.
+
+**Cloudflare Workers AI:**
 
 A cloud model answers in seconds where a CPU-only local model takes tens of seconds to minutes.
 
@@ -377,7 +384,7 @@ Interactive OpenAPI docs: `http://localhost:8000/api/docs`.
 ## Testing
 
 ```bash
-cd backend && .venv/bin/python -m pytest -q      # 226 tests, about 1–2 min (fake desktop: nothing on your PC is touched, nothing shuts down)
+cd backend && .venv/bin/python -m pytest -q      # 227 tests, about 1–2 min (fake desktop: nothing on your PC is touched, nothing shuts down)
 cd voice && .venv/bin/python -m pytest -q        # 7 voice-logic tests (splitting, yes/no, approvals, questions)
 ```
 
